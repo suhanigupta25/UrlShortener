@@ -1,0 +1,25 @@
+{
+  "name": "urlshortener",
+  "version": "1.0.0",
+  "description": "url shortcut and description",
+  "homepage": "https://github.com/suhanigupta25/UrlShortener#readme",
+  "bugs": {
+    "url": "https://github.com/suhanigupta25/UrlShortener/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suhanigupta25/UrlShortener.git"
+  },
+  "license": "ISC",
+  "author": "Suhani Gupta",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.4.1",
+    "nanoid": "^5.1.7"
+  }
+}
