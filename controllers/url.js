@@ -1,6 +1,4 @@
-//git add .
-//git commit -m "your message"
-//git push
+
 const {nanoid}=require("nanoid");
 const URL=require("../models/url");
 
