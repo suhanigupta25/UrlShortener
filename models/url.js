@@ -1,5 +1,6 @@
 const mongoose=require("mongoose");
 
+//schema for url model
 const userschema=mongoose.Schema({
     originalURL: {
         type: String,
@@ -11,6 +12,7 @@ const userschema=mongoose.Schema({
         unique: true,
     },
     visithistory: [{timestamp: {type: Number}}],
+}, {
     timestamps: true
 });
 

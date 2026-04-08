@@ -1,21 +1,35 @@
-
+//git add .
+//git commit -m "your message"
+//git push
 const {nanoid}=require("nanoid");
 const URL=require("../models/url");
 
-
 async function shorturlgen(req,res){
-    const shortID =nanoid(8);
+    
     const body=req.body;
     if(!body.url){
         return res.status(400).json({error:"originalURL is required"});
     }
+    const shortID =nanoid(8);
     await URL.create({
-        shortId :shortID,
+        shortURL :shortID,
         originalURL: body.url,
         visithistory: [],
 
     });
-    return res.status(201).json({shortId: shortID});
+    return res.status(201).json({shortURL: shortID});
 }
 
-module.exports={shorturlgen};
+async function getAnalytics(req,res){
+    const shortId=req.params.shortId;
+    const entry=await URL.findOne({shortURL: shortId});
+    if(!entry){
+        return res.status(404).json({error:"short URL not found"});
+    }
+    return res.json({
+        totalclicks: entry.visithistory.length,
+        analytics: entry.visithistory,
+    })
+}
+
+module.exports={shorturlgen,getAnalytics};
