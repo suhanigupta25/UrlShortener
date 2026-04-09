@@ -18,6 +18,22 @@ async function shorturlgen(req,res){
     return res.status(201).json({shortURL: shortID});
 }
 
+async function handleRedirect(req, res) {
+    const shortId = req.params.shortId;
+
+    const entry = await URL.findOneAndUpdate(
+        { shortURL: shortId },
+        { $push: { visithistory: { timestamp: Date.now() } } },
+        { new: true }
+    );
+
+    if (!entry) {
+        return res.status(404).json({ error: "short URL not found" });
+    }
+
+    res.redirect(entry.originalURL);
+}
+
 async function getAnalytics(req,res){
     const shortId=req.params.shortId;
     const entry=await URL.findOne({shortURL: shortId});
@@ -30,4 +46,4 @@ async function getAnalytics(req,res){
     })
 }
 
-module.exports={shorturlgen,getAnalytics};
+module.exports={shorturlgen,getAnalytics,handleRedirect};

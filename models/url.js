@@ -13,7 +13,7 @@ const userschema=mongoose.Schema({
     },
     visithistory: [{timestamp: {type: Number}}],
 }, {
-    timestamps: true
+    timestamps: true //store createdAt and updatedAt fields automatically,clicks
 });
 
 const URL =mongoose.model("url",userschema);

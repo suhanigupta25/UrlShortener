@@ -16,11 +16,13 @@ connectmongodb("mongodb://localhost:27017/urlshortener")
     console.error("error starting server",err);
 });
 
+//this goes to database find original url with shorturl
 app.get('/:shortId',async(req,res)=>{
     const shortId=req.params.shortId;
     const entry=await URL.findOneAndUpdate(
-        {shortURL: shortId},
-        {$push: {visithistory: {timestamp: Date.now()}}},
+        {shortURL: shortId}, //find the entry with shortURL matching shortId
+        {$push: {visithistory: {timestamp: Date.now()}}}, //adding new record to history
+        {new: true}
 
     );
     if(!entry){
@@ -30,5 +32,5 @@ app.get('/:shortId',async(req,res)=>{
     
 });
 
-app.use("/url",urlRoutes);
+app.use("/",urlRoutes); //redirects to urlroutes
 
