@@ -5,17 +5,20 @@ const URL=require("../models/url");
 async function shorturlgen(req,res){
     
     const body=req.body;
-    if(!body.url){
+    if(!body.enteredUrl){
         return res.status(400).json({error:"originalURL is required"});
     }
     const shortID =nanoid(8);
     await URL.create({
         shortURL :shortID,
-        originalURL: body.url,
+        originalURL: body.enteredUrl,
         visithistory: [],
 
     });
-    return res.status(201).json({shortURL: shortID});
+    return res.render("home",{
+        id:shortID
+    });
+    
 }
 
 async function handleRedirect(req, res) {
@@ -24,7 +27,7 @@ async function handleRedirect(req, res) {
     const entry = await URL.findOneAndUpdate(
         { shortURL: shortId },
         { $push: { visithistory: { timestamp: Date.now() } } },
-        { new: true }
+        {returnDocument: 'after'}
     );
 
     if (!entry) {

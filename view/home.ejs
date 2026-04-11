@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <div class="header">
+            <div class="logo-mark">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </div>
+            <div class="header-text">
+                <h1>URL Shortener</h1>
+                <p>Shorten, share, and track your links</p>
+            </div>
+        </div>
+
+        <div class="card shorten-card">
+            <div class="card-label">Shorten a URL</div>
+            <form action="/" method="POST">
+                <div class="input-row">
+                    <input type="text" name="enteredUrl" placeholder="Paste a long URL here…">
+                    <button type="submit">Shorten →</button>
+                </div>
+            </form>
+
+            <% if(locals.id){ %>
+                <div class="result-banner">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Short URL created:&nbsp;</span>
+                    <a href="/<%= id %>">http://localhost:2500/<%= id %></a>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="card table-card">
+            <div class="table-header">
+                <span class="table-title">Your Links</span>
+                <span class="table-count"><%= urls.length %> total</span>
+            </div>
+
+            <% if (urls.length === 0) { %>
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    </div>
+                    <p>No links yet — shorten your first URL above.</p>
+                </div>
+            <% } else { %>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Short URL</th>
+                                <th>Original URL</th>
+                                <th>Visits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% urls.forEach(url => { %>
+                                <tr>
+                                    <td>
+                                        <a class="short-link" href="/<%= url.shortURL %>">/<%= url.shortURL %></a>
+                                    </td>
+                                    <td>
+                                        <a class="original-link" href="<%= url.originalURL %>" target="_blank" title="<%= url.originalURL %>">
+                                            <%= url.originalURL %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <% if (url.visithistory.length > 0) { %>
+                                            <span class="visit-count">
+                                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                <%= url.visithistory.length %> click<%= url.visithistory.length !== 1 ? 's' : '' %>
+                                            </span>
+                                            <ul class="visits-list">
+                                                <% url.visithistory.forEach(visit => { %>
+                                                    <li><%= visit.timestamp.toLocaleString() %></li>
+                                                <% }) %>
+                                            </ul>
+                                        <% } else { %>
+                                            <span class="no-visits">No visits yet</span>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
+
+    </div>
+</body>
+</html>
