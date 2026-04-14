@@ -1,11 +1,13 @@
 const express=require("express");
 const app=express();
 const port=2500;
-const path=require("path");
-const staticrouter=require("./routes/staticRouter");
-
-const urlRoutes=require("./routes/url");
 const {connectmongodb}=require("./connect");
+const path=require("path");
+
+const staticrouter=require("./routes/staticRouter");
+const urlRoutes=require("./routes/url");
+const userRoutes=require("./routes/user");
+
 const URL =require("./models/url");
 
 app.use(express.json());//middleware for parse json request bodies
@@ -14,6 +16,7 @@ app.use(express.static(path.resolve("./public"))); //serves static files from pu
 
 
 app.use("/",urlRoutes); //redirects to urlroutes
+app.use("/user",userRoutes); //redirects to userroutes
 app.use("/static",staticrouter); //serves static files from public folder
 
 app.get("/",async (req,res)=>{
@@ -34,5 +37,7 @@ connectmongodb("mongodb://localhost:27017/urlshortener")
     console.error("error starting server",err);
 });
 
+//authentication
+const 
 
 
