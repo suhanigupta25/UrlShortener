@@ -1,15 +1,18 @@
 const User=require('../models/user');
 const{v4:uuidv4}=require('uuid');
 const {setuser}=require('../service/auth');
-
 const bcrypt = require("bcrypt");
-const hashedPassword = await bcrypt.hash(password, 10);
+
 
 async function usersignup(req,res){
     try{
+        
         const {username,email,password}=req.body;
-        await User.create({username,email,password:hashedPassword});
-        return res.redirect("/")
+        
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user=await User.create({username,email,password:hashedPassword});
+        console.log(user,"saved");
+        return res.redirect("/");
 
     }
     catch(err){
@@ -22,12 +25,18 @@ async function userlogin(req,res){
     try{
         const {username,password}=req.body;
         const user=await User.findOne({username});
+        
         if(!user){
             return res.status(404).json({message:"user not found"});
         }
-        if(user.password!==password){
-            return res.status(401).json({message:"invalid credentials"});
+        const isMatch = await bcrypt.compare(password, user.password);
+
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "invalid credentials" });
         }
+        
+       
         const token=uuidv4();
         setuser(token,user);
         res.cookie("token",token,{httpOnly:true}); //set token in cookie for authentication

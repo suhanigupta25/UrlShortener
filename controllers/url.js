@@ -13,11 +13,10 @@ async function shorturlgen(req,res){
         shortURL :shortID,
         originalURL: body.enteredUrl,
         visithistory: [],
+        createdBy: req.user._id,
 
     });
-    return res.render("home",{
-        id:shortID
-    });
+    return res.redirect("/"); //redirect to home page after creating short url
     
 }
 

@@ -18,19 +18,19 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.resolve("./public"))); //serves static files from public folder
 
 
-app.use("/",restricttoauth,urlRoutes); //redirects to urlroutes
+app.use("/url",restricttoauth,urlRoutes); //redirects to urlroutes
 app.use("/user",userRoutes); //redirects to userroutes
-app.use("/static",staticrouter); //serves static files from public folder
+app.use("/",staticrouter); //serves static files from public folder
 
-app.get("/",async (req,res)=>{
-    const allUrls=await URL.find({});
+app.get("/",restricttoauth,async (req,res)=>{
+    const allUrls=await URL.find({ createdBy: req.user._id }).sort({ createdAt: -1 }); //fetch all urls created by the user and sort by creation date
     return res.render("home",{
         urls: allUrls
     });
 });
 
 app.set("view engine","ejs");
-app.set("views",path.resolve("./view"));
+app.set("views",path.resolve("./views"));
 
 connectmongodb("mongodb://localhost:27017/urlshortener")
 .then(()=>{

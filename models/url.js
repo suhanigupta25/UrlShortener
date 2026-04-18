@@ -11,6 +11,11 @@ const userschema=mongoose.Schema({
         required: true,
         unique: true,
     },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+        required: true,
+    },
     visithistory: [{timestamp: {type: Number}}],
 }, {
     timestamps: true //store createdAt and updatedAt fields automatically,clicks
