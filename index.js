@@ -3,19 +3,22 @@ const app=express();
 const port=2500;
 const {connectmongodb}=require("./connect");
 const path=require("path");
+const cookieParser=require("cookie-parser");
 
 const staticrouter=require("./routes/staticRouter");
 const urlRoutes=require("./routes/url");
 const userRoutes=require("./routes/user");
 
+const restricttoauth=require("./middleware/auth");
 const URL =require("./models/url");
 
+app.use(cookieParser()); //middleware for parse cookies
 app.use(express.json());//middleware for parse json request bodies
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.resolve("./public"))); //serves static files from public folder
 
 
-app.use("/",urlRoutes); //redirects to urlroutes
+app.use("/",restricttoauth,urlRoutes); //redirects to urlroutes
 app.use("/user",userRoutes); //redirects to userroutes
 app.use("/static",staticrouter); //serves static files from public folder
 
@@ -37,7 +40,7 @@ connectmongodb("mongodb://localhost:27017/urlshortener")
     console.error("error starting server",err);
 });
 
-//authentication
-const 
+
+
 
 
